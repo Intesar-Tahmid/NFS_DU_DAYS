@@ -90,37 +90,21 @@ bool loadMedia()
 	//Loading success flag
 	bool success = true;
 
-	/*//Load Fonts
-	if( !U_BG.loadFromFile( "test.png" ) )
+	//Load Fonts
+	if(!gUBGTexture.loadFromFile("Mode/Username.png"))
 	{
-		printf( "Failed to load MENU texture!\n" );
+		printf("Failer to load Username!\n");
 		success = false;
 	}
-	//Open the font
-	gFont = TTF_OpenFont( "lazy.ttf", 28 );
-	sFont = TTF_OpenFont( "score.ttf", 28 );
+	gFont = TTF_OpenFont("Fonts/spyagency.ttf", 28);
+	sFont = TTF_OpenFont("Fonts/score.ttf", 28);
 	mainFont = gFont;
-	if( gFont == NULL )
+	if(gFont == NULL)
 	{
-		printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
-		success = false;
+		printf("Failed to load spyagency font! SDL_ttf Error: %s\n", TTF_GetError());
 	}
-	else
-	{	
-		//Render the prompt
-		TTF_SetFontStyle(mainFont, TTF_STYLE_BOLD);
-		//TTF_SetFontStyle(sFont, TTF_STYLE_BOLD);
-		SDL_Color textColor = { 255, 255, 255, 0xFF };
-		string T = "Enter Handle : ";
-		if( !gPromptTextTexture.loadFromRenderedText( T.c_str(), textColor ) )
-		{
-			printf( "Failed to render prompt text!\n" );
-			success = false;
-		}
-	}*/
 
 	//Load Menu
-
     if( !gMenuTexture.loadFromFile( "Menu/Menu.png" ) )
 	{
 		printf( "Failed to load MENU texture!\n" );
@@ -152,6 +136,21 @@ bool loadMedia()
         printf( "Failed to load Background texture!\n" );
         success = false;
     }
+    if( !gInsTexture.loadFromFile( "Instructions/Ins.png" ) )
+    {
+        printf( "Failed to load Instructions texture!\n" );
+        success = false;
+    }
+    if( !gIns1Texture.loadFromFile( "Instructions/Ins_1.png" ) )
+    {
+        printf( "Failed to load Instructions1 texture!\n" );
+        success = false;
+    }
+    if( !gModeTexture.loadFromFile( "Mode/Mode.png" ) )
+    {
+        printf( "Failed to load Mode texture!\n" );
+        success = false;
+    }
 
 	return success;
 }
@@ -167,7 +166,7 @@ void changeFromMenu(int x, int y) {
         	return;
         }
 		if(whereInMenu == PLAY){
-        	where = PLAY;
+        	where = USERNAME;
         	return;
         }
         if(whereInMenu == INSTRUCTION){
@@ -224,6 +223,48 @@ void handleMenuEvent(SDL_Event& e)
 	}
 }
 
+int whereInInstructions;
+
+void changeFromInstructions(int x, int y)
+{
+	if(whereInInstructions == BACK)
+	{
+		where = MENU;
+		whereInInstructions = 0;
+		return;
+	}
+}
+
+void changeInstructionsAnimation(int x, int y)
+{
+	if(x >= 55 && x<=233 && y >= 47 && y<=102)
+	{
+		whereInInstructions = BACK;
+		return;
+	}
+	whereInInstructions = 0;
+}
+
+void handleInstructionEvent(SDL_Event &e)
+{
+	int mx, my, wx, wy;
+	if(e.type == SDL_MOUSEMOTION){
+
+        SDL_GetGlobalMouseState(&mx, &my);
+        SDL_GetWindowPosition(gWindow, &wx, &wy);
+        changeInstructionsAnimation(mx - wx, my - wy);
+    }
+
+	if(e.type == SDL_MOUSEBUTTONUP) {
+
+		SDL_GetGlobalMouseState(&mx, &my);
+		SDL_GetWindowPosition(gWindow, &wx, &wy);
+		changeFromInstructions(mx - wx, my - wy);
+	}
+
+}
+
+
 void close()
 {
 	//Free loaded images
@@ -261,12 +302,16 @@ int main( int argc, char* args[] )
 
 			//Event handler
 			SDL_Event e;
-
+			SDL_Color textColor = { 255, 255, 255, 0xFF };
 			int scrollingOffset = 0;
+			std::string inputText = "";
+
+			gInputTextTexture.loadFromRenderedText( inputText.c_str(), textColor );
+			SDL_StartTextInput();
 
 			while( !quit )
 			{	
-				
+				bool renderText = false;
 
 				while( SDL_PollEvent( &e ) != 0 )
 				{
@@ -275,10 +320,50 @@ int main( int argc, char* args[] )
 					{
 						quit = true;
 					}
-					handleMenuEvent(e);
+					if(where == USERNAME)
+					{
+						if( e.type == SDL_QUIT )
+						{
+							quit = true;
+						}
+
+						else if( e.type == SDL_KEYDOWN )
+						{
+							//Handle backspace
+							if( e.key.keysym.sym == SDLK_BACKSPACE && inputText.length() > 0 )
+							{
+								//lop off character
+								inputText.pop_back();
+								renderText = true;
+							}
+							//Handle copy
+							else if( e.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL )
+							{
+								SDL_SetClipboardText( inputText.c_str() );
+							}
+							//Handle paste
+							else if( e.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL )
+							{
+								inputText = SDL_GetClipboardText();
+								renderText = true;
+							}
+						}
+						//Special text input event
+						else if( e.type == SDL_TEXTINPUT )
+						{
+							//Not copy or pasting
+							if( !( SDL_GetModState() & KMOD_CTRL && ( e.text.text[ 0 ] == 'c' || e.text.text[ 0 ] == 'C' || e.text.text[ 0 ] == 'v' || e.text.text[ 0 ] == 'V' ) ) )
+							{
+								//Append character
+								inputText += e.text.text;
+								renderText = true;
+							}
+						}
+					}
 				}
 
 				if(where == MENU) {
+					handleMenuEvent(e);
 
                     if(whereInMenu == PLAY){
                         SDL_SetRenderDrawColor( gRenderer, 255, 255, 255, 255 );
@@ -317,7 +402,7 @@ int main( int argc, char* args[] )
                         SDL_RenderPresent( gRenderer );
                     }
 
-					if(whereInMenu == 0){
+					if(whereInMenu == DEFAULT){
                         SDL_SetRenderDrawColor( gRenderer, 255, 255, 255, 255 );
                         SDL_RenderClear( gRenderer );
 
@@ -330,7 +415,76 @@ int main( int argc, char* args[] )
 
 				else if(where == PLAY)
 				{
+
+					SDL_SetRenderDrawColor( gRenderer, 255, 255, 255, 255 );
+                    SDL_RenderClear( gRenderer );
+                    gModeTexture.render( 0, 0 );
+                    gModeTexture.render(gModeTexture.getWidth(), 0 ); 
+                    SDL_RenderPresent( gRenderer );
+					if(e.key.keysym.sym==SDLK_ESCAPE)
+					{
+						cout<< "Back To Menu" << endl;
+						where = MENU;
+					}
+
+					if(e.key.keysym.sym==SDLK_c)
+					{
+						cout<< "CLASSIC Mode" << endl;
+						where = CLASSIC;
+
+					}
+
+					if(e.key.keysym.sym==SDLK_t)
+					{
+						cout<< "Treasure Hunt Mode" << endl;
+						where = TH;
+					}
+
 					
+				}
+
+				else if(where == USERNAME)
+				{
+					if(e.key.keysym.sym==SDLK_ESCAPE)
+					{
+						cout<< "Back To Play" << endl;
+						where = MENU;
+					}
+					else if(e.key.keysym.sym==SDLK_RETURN)
+					{
+						where = PLAY;
+					}
+					if( renderText )
+					{
+						//Text is not empty
+						if( inputText != "" )
+						{
+							//Render new text
+							gInputTextTexture.loadFromRenderedText( inputText.c_str(), textColor );
+						}
+						//Text is empty
+						else
+						{
+							//Render space texture
+							gInputTextTexture.loadFromRenderedText( " ", textColor );
+						}
+					}	
+
+					//Clear screen
+					SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+					SDL_RenderClear( gRenderer );
+					gUBGTexture.render( 0, 0 );
+                    gUBGTexture.render(gUBGTexture.getWidth(), 0 ); 
+					//Render text textures
+					//gPromptTextTexture.render( ( SCREEN_WIDTH - gPromptTextTexture.getWidth() ) / 2, 0 );
+					gInputTextTexture.render( ( SCREEN_WIDTH - gInputTextTexture.getWidth() ) / 2, ( SCREEN_HEIGHT - gInputTextTexture.getHeight() )/2);
+
+					//Update screen
+					SDL_RenderPresent( gRenderer );
+				}
+
+				else if(where == CLASSIC)
+				{
 					//Scroll background
                 	scrollingOffset-=4;
                 	if( scrollingOffset < -gBGTexture.getWidth() )
@@ -349,6 +503,47 @@ int main( int argc, char* args[] )
 
                 	//Update screen
                 	SDL_RenderPresent( gRenderer );
+				}
+
+				else if(where == TH)
+				{
+					//Scroll background
+                	scrollingOffset-=4;
+                	if( scrollingOffset < -gBGTexture.getWidth() )
+                	{	
+                    	scrollingOffset = 0;
+                	}
+
+                	//Clear screen
+                	SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+                	SDL_RenderClear( gRenderer );
+
+                	//Render background
+                	gBGTexture.render( scrollingOffset, 0 );
+                	gBGTexture.render( scrollingOffset + gBGTexture.getWidth(), 0 );
+
+
+                	//Update screen
+                	SDL_RenderPresent( gRenderer );
+				}
+
+				else if(where==INSTRUCTION)
+				{
+					handleInstructionEvent(e);
+					SDL_SetRenderDrawColor( gRenderer, 255, 255, 255, 255 );
+                    SDL_RenderClear( gRenderer );
+					if(!whereInInstructions){
+                        
+                        gInsTexture.render( 0, 0 );
+                        gInsTexture.render(gInsTexture.getWidth(), 0 );
+                        
+                    }
+                    else{
+
+                        gIns1Texture.render( 0, 0 );
+                        gIns1Texture.render(gIns1Texture.getWidth(), 0 );
+                    }
+                    SDL_RenderPresent( gRenderer );
 				}
 
                 else if(where == EXIT) {

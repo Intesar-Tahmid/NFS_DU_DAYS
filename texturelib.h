@@ -26,7 +26,7 @@ class LTexture
 		//Loads image at specified path
 		bool loadFromFile( std::string path );
 		
-		#if defined(_SDL_TTF_H) || defined(SDL_TTF_H)
+		#if defined(SDL_TTF_MAJOR_VERSION)
 		//Creates image from font string
 		bool loadFromRenderedText( std::string textureText, SDL_Color textColor );
 		#endif
@@ -105,7 +105,7 @@ bool LTexture::loadFromFile( std::string path )
 	return mTexture != NULL;
 }
 
-#if defined(_SDL_TTF_H) || defined(SDL_TTF_H)
+#if defined(SDL_TTF_MAJOR_VERSION)
 bool LTexture::loadFromRenderedText( std::string textureText, SDL_Color textColor )
 {
 	//Get rid of preexisting texture
@@ -211,3 +211,8 @@ LTexture gMenuInsTexture;
 LTexture gMenuLeadTexture;
 LTexture gMenuExitTexture;
 LTexture gBGTexture;
+LTexture gInsTexture;
+LTexture gIns1Texture;
+LTexture gModeTexture;
+LTexture gUBGTexture;
+LTexture gInputTextTexture;
