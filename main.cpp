@@ -19,6 +19,9 @@ void close();
 
 int where = MENU, whereInMenu;
 
+Mix_Music *gMenuMusic = NULL;
+Mix_Music *gPlayMusic = NULL;
+
 
 
 bool init()
@@ -150,6 +153,18 @@ bool loadMedia()
     {
         printf( "Failed to load Mode texture!\n" );
         success = false;
+    }
+    gMenuMusic = Mix_LoadMUS( "Sounds/Apparat.wav" );
+    if( gMenuMusic == NULL )
+    {
+	printf( "Failed to load Menu music! SDL_mixer Error: %s\n", Mix_GetError() );
+	success = false;
+    }
+    gPlayMusic = Mix_LoadMUS( "Sounds/thor.wav" );
+    if( gPlayMusic == NULL )
+    {
+	printf( "Failed to load Play music! SDL_mixer Error: %s\n", Mix_GetError() );
+	success = false;
     }
 
 	return success;
@@ -360,10 +375,17 @@ int main( int argc, char* args[] )
 							}
 						}
 					}
+
 				}
 
 				if(where == MENU) {
+
 					handleMenuEvent(e);
+					if( Mix_PlayingMusic() == 0 )
+					{
+						//Play the music
+						Mix_PlayMusic( gMenuMusic, -1 );
+					}	
 
                     if(whereInMenu == PLAY){
                         SDL_SetRenderDrawColor( gRenderer, 255, 255, 255, 255 );
@@ -415,14 +437,24 @@ int main( int argc, char* args[] )
 
 				else if(where == PLAY)
 				{
+					
+
+					if( Mix_PlayingMusic() == 0 )
+					{
+						//Play the music
+						Mix_PlayMusic( gPlayMusic, -1 );
+					}	
 
 					SDL_SetRenderDrawColor( gRenderer, 255, 255, 255, 255 );
                     SDL_RenderClear( gRenderer );
                     gModeTexture.render( 0, 0 );
                     gModeTexture.render(gModeTexture.getWidth(), 0 ); 
                     SDL_RenderPresent( gRenderer );
+
+					
 					if(e.key.keysym.sym==SDLK_ESCAPE)
 					{
+						Mix_HaltMusic();
 						cout<< "Back To Menu" << endl;
 						where = MENU;
 					}
@@ -445,9 +477,10 @@ int main( int argc, char* args[] )
 
 				else if(where == USERNAME)
 				{
+					Mix_HaltMusic();
 					if(e.key.keysym.sym==SDLK_ESCAPE)
 					{
-						cout<< "Back To Play" << endl;
+						cout<< "Back To Menu" << endl;
 						where = MENU;
 					}
 					else if(e.key.keysym.sym==SDLK_RETURN)
@@ -485,6 +518,12 @@ int main( int argc, char* args[] )
 
 				else if(where == CLASSIC)
 				{
+					if(e.key.keysym.sym==SDLK_ESCAPE)
+					{
+						Mix_HaltMusic();
+						cout<< "Back To Menu" << endl;
+						where = MENU;
+					}
 					//Scroll background
                 	scrollingOffset-=4;
                 	if( scrollingOffset < -gBGTexture.getWidth() )
@@ -507,6 +546,12 @@ int main( int argc, char* args[] )
 
 				else if(where == TH)
 				{
+					if(e.key.keysym.sym==SDLK_ESCAPE)
+					{
+						Mix_HaltMusic();
+						cout<< "Back To Menu" << endl;
+						where = MENU;
+					}
 					//Scroll background
                 	scrollingOffset-=4;
                 	if( scrollingOffset < -gBGTexture.getWidth() )
