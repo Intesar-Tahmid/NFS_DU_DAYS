@@ -11,3 +11,6 @@ extern int EXIT = 7;
 extern int BACK = 8;
 extern int CLASSIC = 9;
 extern int TH = 10;
+extern int RUNNING = 8;
+extern int GROUND = 625;
+extern bool PauseOn = 0;
