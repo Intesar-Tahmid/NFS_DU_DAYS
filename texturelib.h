@@ -205,8 +205,6 @@ LTexture::LTexture()
 	mHeight = 0;
 }
 
-SDL_Rect Karimclips[8];
-LTexture gKarim;
 LTexture gMenuTexture;
 LTexture gMenuPlayTexture;
 LTexture gMenuInsTexture;

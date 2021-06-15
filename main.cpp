@@ -3,11 +3,9 @@
 #include <stdio.h>
 #include <string>
 #include "texturelib.h"
-#include "karim.h"
 #include <SDL2/SDL_mixer.h>
 #include <bits/stdc++.h>
 #include <SDL2/SDL_ttf.h>
-#include <sstream>
 using namespace std;
 
 //Starts up SDL and creates window
@@ -24,9 +22,7 @@ int where = MENU, whereInMenu;
 Mix_Music *gMenuMusic = NULL;
 Mix_Music *gPlayMusic = NULL;
 
-int frame = 0;
-int startTime = 0;
-double hello = 0;	
+
 
 bool init()
 {
@@ -170,35 +166,6 @@ bool loadMedia()
 	printf( "Failed to load Play music! SDL_mixer Error: %s\n", Mix_GetError() );
 	success = false;
     }
-    if( !gKarim.loadFromFile( "karim.png" ) )
-	{
-		printf( "Failed to load walking animation texture!\n" );
-		success = false;
-	}	
-	else
-	{
-	//Set Birdy clips
-	
-	int ex = 0;
-	for(int hp = 0; hp <4; hp++)
-	{
-		Karimclips[ hp ].x = ex;
-		Karimclips[ hp ].y = 0;
-		Karimclips[ hp ].w = 63;
-		Karimclips[ hp ].h = 85;
-		ex += 63;
-	}
-	
-	ex = 0;
-	for(int hp = 4; hp <8; hp++)
-	{
-		Karimclips[ hp ].x = ex;
-		Karimclips[ hp ].y = 85;
-		Karimclips[ hp ].w = 63;
-		Karimclips[ hp ].h = 85;
-		ex += 63;
-	}  
-	}
 
 	return success;
 }
@@ -350,10 +317,10 @@ int main( int argc, char* args[] )
 
 			//Event handler
 			SDL_Event e;
-			Karim Karim;
 			SDL_Color textColor = { 255, 255, 255, 0xFF };
 			int scrollingOffset = 0;
 			std::string inputText = "";
+
 			gInputTextTexture.loadFromRenderedText( inputText.c_str(), textColor );
 			SDL_StartTextInput();
 
@@ -368,15 +335,8 @@ int main( int argc, char* args[] )
 					{
 						quit = true;
 					}
-
-					if(where == MENU)
+					if(where == USERNAME)
 					{
-						handleMenuEvent(e);
-					}
-
-					else if(where == USERNAME)
-					{
-						Karim.init();
 						if( e.type == SDL_QUIT )
 						{
 							quit = true;
@@ -415,16 +375,12 @@ int main( int argc, char* args[] )
 							}
 						}
 					}
-					else if(where == CLASSIC)
-					{
-						Karim.handleEvent(e);
-					}
 
 				}
 
 				if(where == MENU) {
 
-				
+					handleMenuEvent(e);
 					if( Mix_PlayingMusic() == 0 )
 					{
 						//Play the music
@@ -507,7 +463,6 @@ int main( int argc, char* args[] )
 					{
 						cout<< "CLASSIC Mode" << endl;
 						where = CLASSIC;
-						startTime = SDL_GetTicks();
 
 					}
 
@@ -562,66 +517,31 @@ int main( int argc, char* args[] )
 				}
 
 				else if(where == CLASSIC)
-				{	
+				{
 					if(e.key.keysym.sym==SDLK_ESCAPE)
 					{
 						Mix_HaltMusic();
 						cout<< "Back To Menu" << endl;
 						where = MENU;
 					}
-					
-					if(PauseOn)
-					{
-						SDL_RenderClear(gRenderer);
-						gBGTexture.render(scrollingOffset,0);
-						gBGTexture.render( scrollingOffset + gBGTexture.getWidth(), 0 );
-						SDL_Rect* currentClip = &Karimclips[1];
-						Karim.render(currentClip);
-						SDL_RenderPresent(gRenderer);
-					}
+					//Scroll background
+                	scrollingOffset-=4;
+                	if( scrollingOffset < -gBGTexture.getWidth() )
+                	{	
+                    	scrollingOffset = 0;
+                	}
 
-					else
-					{
-						Karim.move();
+                	//Clear screen
+                	SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+                	SDL_RenderClear( gRenderer );
 
-						//Scroll background
-                		scrollingOffset-=(4+hello);
-                		//cout << "What up" << endl;
-                		cout << hello << endl;
-                    	hello+= .0005;
-                		if( scrollingOffset < -gBGTexture.getWidth() )
-                		{	
-                    		scrollingOffset = 0;
-                		}
+                	//Render background
+                	gBGTexture.render( scrollingOffset, 0 );
+                	gBGTexture.render( scrollingOffset + gBGTexture.getWidth(), 0 );
 
-                		//Clear screen
-                		SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-                		SDL_RenderClear( gRenderer );
 
-                		//Render background
-                		gBGTexture.render( scrollingOffset, 0 );
-                		gBGTexture.render( scrollingOffset + gBGTexture.getWidth(), 0 );
-                	
-                	
-						++frame;
-
-						//Cycle animation
-						if( frame / 8 >= RUNNING )
-						{
-							frame = 0;
-						}
-
-						//Render current frame
-						SDL_Rect* currentClip = &Karimclips[ frame / 8 ];
-						Karim.render( currentClip );
-
-						//Go to next frame
-			
-
-                		//Update screen
-                		SDL_RenderPresent( gRenderer );
-					}
-					
+                	//Update screen
+                	SDL_RenderPresent( gRenderer );
 				}
 
 				else if(where == TH)
@@ -669,7 +589,6 @@ int main( int argc, char* args[] )
                         gIns1Texture.render(gIns1Texture.getWidth(), 0 );
                     }
                     SDL_RenderPresent( gRenderer );
-                   
 				}
 
                 else if(where == EXIT) {
