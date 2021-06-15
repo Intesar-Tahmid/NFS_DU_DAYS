@@ -17,10 +17,8 @@ class Karim
 		//Maximum axis velocity of the Karim
 		static const int Karim_VEL = 10;
 		int jumped;
-		int shuriken_throwed;
 		int Life;
 		int Power;
-		int hitten;
 		//Initializes the variables
 		Karim();
 
@@ -50,11 +48,10 @@ void Karim::init()
     mPosY = GROUND;
 
     //Initialize the velocity
-    hitten=0;
+
     mVelX = 0;
     mVelY = 0;
     jumped=0;
-    shuriken_throwed=0;
     initial = -13;
     velocity=initial;
  	gravity=0.5;
@@ -70,11 +67,9 @@ Karim::Karim()
     mPosY = GROUND;
 
     //Initialize the velocity
-    hitten=0;
     mVelX = 0;
     mVelY = 0;
     jumped=0;
-    shuriken_throwed=0;
     initial = -13;
     velocity=initial;
  	gravity=0.5;
@@ -116,7 +111,6 @@ void Karim::handleEvent( SDL_Event& e )
             case 'a': mVelX -= Karim_VEL; break;
             case 'd': mVelX += Karim_VEL; break;
             case 'w': jumped=1;break;
-            case 'q': shuriken_throwed=1;break;
             
         }
         else
@@ -178,7 +172,6 @@ void Karim::move()
         //Move back
         mPosY -= mVelY;
     }
-    cout << "Pos " << mPosX << ' ' << "Vel " << mVelX << endl;
     Karim_Rect.x=mPosX;
     Karim_Rect.y=mPosY;
 }
