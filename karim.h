@@ -17,8 +17,10 @@ class Karim
 		//Maximum axis velocity of the Karim
 		static const int Karim_VEL = 10;
 		int jumped;
+        	int fireball_throwed;
 		int Life;
 		int Power;
+		int hitten;
 		//Initializes the variables
 		Karim();
 
@@ -52,6 +54,8 @@ void Karim::init()
     mVelX = 0;
     mVelY = 0;
     jumped=0;
+    hitten = 0;
+    fireball_throwed=0;
     initial = -13;
     velocity=initial;
  	gravity=0.5;
@@ -67,9 +71,11 @@ Karim::Karim()
     mPosY = GROUND;
 
     //Initialize the velocity
+    hitten = 0;
     mVelX = 0;
     mVelY = 0;
     jumped=0;
+    fireball_throwed=0;
     initial = -13;
     velocity=initial;
  	gravity=0.5;
@@ -111,6 +117,7 @@ void Karim::handleEvent( SDL_Event& e )
             case 'a': mVelX -= Karim_VEL; break;
             case 'd': mVelX += Karim_VEL; break;
             case 'w': jumped=1;break;
+            case 'q': fireball_throwed=1;break;
             
         }
         else
@@ -134,6 +141,7 @@ void Karim::handleEvent( SDL_Event& e )
             case 'a': mVelX += Karim_VEL; break;
             case 'd': mVelX -= Karim_VEL; break;
             case 'p': mVelX =0;break;
+            //case 'q': fireball_throwed=0;break;
 
         }
         else

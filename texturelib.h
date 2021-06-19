@@ -4,6 +4,10 @@
 #include <string>
 #include <SDL2/SDL_ttf.h>
 #include "constants.h"
+#include "obstacle.h"
+#include "moving_obstacle.h"
+#include "fireball.h"
+//#include "karim.h"
 
 using namespace std;
 SDL_Window* gWindow = NULL;
@@ -207,6 +211,9 @@ LTexture::LTexture()
 
 SDL_Rect Karimclips[8];
 LTexture gKarim;
+LTexture gObstacleTexture;
+LTexture gPlaneTexture;
+LTexture gFireballTexture;
 LTexture gMenuTexture;
 LTexture gMenuPlayTexture;
 LTexture gMenuInsTexture;
@@ -218,3 +225,78 @@ LTexture gIns1Texture;
 LTexture gModeTexture;
 LTexture gUBGTexture;
 LTexture gInputTextTexture;
+LTexture gSoundOn;
+LTexture gSoundOff;
+//LTexture gScoreTextTexture;
+LTexture gGameOverTexture;
+//new add below
+LTexture gHealthTexture;
+LTexture gPowerTexture;
+LTexture gPlayerHandleTexture;
+LTexture U_BG;
+LTexture gScore;
+LTexture gMovingObstacle;
+LTexture gLeaderBoard1;
+LTexture gLeaderBoard2;
+LTexture gLeaderBoardScores[10];
+//new add above
+
+void Obstacle::render()
+{
+	gObstacleTexture.render(mPosX,mPosY);
+}
+
+void Moving_Obstacle::render()
+{
+	gPlaneTexture.render(mPosX,mPosY);
+}
+
+void Fireball::render()
+{
+	gFireballTexture.render(mPosX,mPosY);
+}
+
+bool checkCollision( SDL_Rect a, SDL_Rect b )
+{
+    //The sides of the rectangles
+    int leftA, leftB;
+    int rightA, rightB;
+    int topA, topB;
+    int bottomA, bottomB;
+
+    //Calculate the sides of rect A
+    leftA = a.x;
+    rightA = a.x + a.w;
+    topA = a.y;
+    bottomA = a.y + a.h;
+
+    //Calculate the sides of rect B
+    leftB = b.x;
+    rightB = b.x + b.w;
+    topB = b.y;
+    bottomB = b.y + b.h;
+
+    //If any of the sides from A are outside of B
+    if( bottomA <= topB )
+    {
+        return false;
+    }
+
+    if( topA >= bottomB )
+    {
+        return false;
+    }
+
+    if( rightA <= leftB )
+    {
+        return false;
+    }
+
+    if( leftA >= rightB )
+    {
+        return false;
+    }
+
+    //If none of the sides from A are outside B
+    return true;
+}
