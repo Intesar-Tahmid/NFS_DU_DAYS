@@ -239,6 +239,18 @@ LTexture gMovingObstacle;
 LTexture gLeaderBoard1;
 LTexture gLeaderBoard2;
 LTexture gLeaderBoardScores[10];
+LTexture gR1Texture;
+LTexture gR2Texture;
+LTexture gR3Texture;
+LTexture gR4Texture;
+LTexture gR5Texture;
+LTexture gR6Texture;
+LTexture gR7Texture;
+LTexture gWrongTexture;
+LTexture gRightTexture;
+LTexture gCongratsTexture;
+LTexture gGO2Texture;
+
 //new add above
 
 void Obstacle::render()
