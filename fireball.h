@@ -31,7 +31,7 @@ class Fireball
     private:
 		//The X and Y offsets of the Naruto
 		//The velocity of the Naruto
-		int fuck;
+		int f;
 };
 
 Fireball::Fireball()

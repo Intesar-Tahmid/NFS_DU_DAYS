@@ -34,7 +34,6 @@ class LTexture
 		//Creates image from font string
 		bool loadFromRenderedText( std::string textureText, SDL_Color textColor );
 		#endif
-
 		//Deallocates texture
 		void free();
 
@@ -229,7 +228,7 @@ LTexture gSoundOn;
 LTexture gSoundOff;
 //LTexture gScoreTextTexture;
 LTexture gGameOverTexture;
-//new add below
+
 LTexture gHealthTexture;
 LTexture gPowerTexture;
 LTexture gPlayerHandleTexture;
@@ -251,7 +250,6 @@ LTexture gRightTexture;
 LTexture gCongratsTexture;
 LTexture gGO2Texture;
 
-//new add above
 
 void Obstacle::render()
 {

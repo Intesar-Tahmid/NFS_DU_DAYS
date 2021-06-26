@@ -20,6 +20,7 @@ int main( int argc, char* args[] )
 	else
 	{
 		//Load media
+		//loadmedia function loads all the media files that are used in the code
 		if( !loadMedia() )
 		{
 			printf( "Failed to load media!\n" );
@@ -32,22 +33,24 @@ int main( int argc, char* args[] )
 			SDL_Event e;
 			//The player running through the screen
 			Karim Karim;
-			bool recall=0;
-			Fireball fb[5];
-			Obstacle barrier[10];
-			Moving_Obstacle plane[10];
+
+			bool recall=0; // Recall is used to get back to the menu with already saved information
+
+			Fireball fb[5]; //Refers to the fireball that will be shot
+			Obstacle barrier[10]; //Refers to the obstacles that have to avoided
+			Moving_Obstacle plane[10]; //Refers to the obstacles that have to avoided or can be shot to earn points
 			bool renderText = false;
-			//new addition below
-			int score=0,counter=0;
+		
+			int score=0; //variable that will store the score of the gamer
+
 			char health_char='1';
-			string health_path="health/1h.png";
+			string health_path="health/1h.png"; //path for calling the images that represent health
 			gHealthTexture.loadFromFile(health_path);
-			string power_path="power/0.png";
-			gPowerTexture.loadFromFile(power_path);
-			//new addition above
+			
 			SDL_Color textColor = { 255, 255, 255, 0xFF };
 			double scrollingOffset = 0;
-			std::string inputText = "";
+
+			std::string inputText = ""; //string variable that will store the "Username"
 			SDL_StartTextInput();
 
 			while( !quit )
@@ -63,6 +66,7 @@ int main( int argc, char* args[] )
 					}
 
 					//Toggle music
+					//Press F5 to turn the music off and F6 for turning on again
 					if(e.key.keysym.sym == SDLK_F5)
 					{
 						musicOn = 0;
@@ -77,58 +81,35 @@ int main( int argc, char* args[] )
 					{
 						if(recall == 1)
 						{
-							scrollingOffset = 0;
-							startTime=0;
-							hello=0;
-							/*new add below
-							readSaveData();
-                            writeSaveData();
-                            //mainFont = gFont;
-							*///new add avove
+							scrollingOffset = 0; //Making the scrolling speed zero for starting over with this speed, not that of when the game was over
+							startTime=0; //Flag to count the time spent from beginning again
+
+							hello=0; 
+
+							level = 1;
+							//initializes obstacles
 							for(int i=0;i<10;i++)
 							{
-								barrier[i].init();
+								barrier[i].init(); 
 								plane[i].init();
 							}
-
-							//new addition below
 							
                             score=0;
-                            counter=0;
+
                             health_char='1';
                             health_path="health/1h.png";
 							gHealthTexture.loadFromFile(health_path);
-							//power_path="power/0.png";
-							//gPowerTexture.loadFromFile(power_path);
-                            Karim.Life = 100;
-                            //Karim.Power=0;
-							//new addition above
+
+                            Karim.Life = 100; // Providing full life when restarting the game 
+
 							renderText = false;
 							inputText = " ";
-							Karim.init();
+							Karim.init(); //Initializing the running character again
+
 							SDL_StartTextInput();
 							recall = 0; 
 						}
 
-						/*if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F1){
-							LoadSaveData(0, score, PlayerHandle, health_path, power_path, Karim.Life, Karim.Power);
-							// cout << score << ' ' << PlayerHandle << health_path << ' ' << power_path << endl;
-						}
-						else if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F2){
-							LoadSaveData(1, score, PlayerHandle, health_path, power_path, Karim.Life, Karim.Power);
-						}
-						else if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F3){
-							LoadSaveData(2, score, PlayerHandle, health_path, power_path, Karim.Life, Karim.Power);
-						}
-						else if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F4){
-							LoadSaveData(3, score, PlayerHandle, health_path, power_path, Karim.Life, Karim.Power);
-						}
-						else if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F5){
-							LoadSaveData(4, score, PlayerHandle, health_path, power_path, Karim.Life, Karim.Power);
-						}
-						else if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F6){
-							LoadSaveData(5, score, PlayerHandle, health_path, power_path, Karim.Life, Karim.Power);
-						}*/
 						handleMenuEvent(e);
 					}
 
@@ -175,24 +156,7 @@ int main( int argc, char* args[] )
 					}
 					else if(where == CLASSIC)
 					{
-						/*if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F1){
-							SLOT[0] = saveData(score, PlayerHandle, health_path, power_path, true);
-						}
-						else if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F2){
-							SLOT[1] = saveData(score, PlayerHandle, health_path, power_path, true);
-						}
-						else if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F3){
-							SLOT[2] = saveData(score, PlayerHandle, health_path, power_path, true);
-						}
-						else if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F4){
-							SLOT[3] = saveData(score, PlayerHandle, health_path, power_path, true);
-						}
-						else if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F5){
-							SLOT[4] = saveData(score, PlayerHandle, health_path, power_path, true);
-						}
-						else if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F6){
-							SLOT[5] = saveData(score, PlayerHandle, health_path, power_path, true);
-						}*/
+						
 						Karim.handleEvent(e);
 					}
 
@@ -227,7 +191,7 @@ int main( int argc, char* args[] )
 					}
 					else 
 					{
-						Mix_HaltMusic();
+						Mix_HaltMusic(); //This library function stops the music
 
 					}
 
@@ -281,13 +245,12 @@ int main( int argc, char* args[] )
 
 				else if(where == LEADERBOARD) 
 				{
-					//cout<< "dhuklam" << endl;
 					if(scoreLoaded == false) loadScoreFromFile();
-					//cout<< "file loads" << endl;
+				
 					int Y = 260, rank = 0;
 
 					mainFont = gFont;
-					//cout<< "font loads" << endl;
+				
 					SDL_SetRenderDrawColor( gRenderer, 255, 255, 255, 255 );
                     SDL_RenderClear( gRenderer );
                     
@@ -302,13 +265,10 @@ int main( int argc, char* args[] )
                     }
 
 					for(auto user : LeaderboardData) {
-						const int total_width = 40;
-			            const int s_width = strlen(user.handle);
+						const int total_width = 55;
+			            const int s_width = strlen(user.handle); //Determining the length of the handle given by the user
 			            const int field_width = (total_width - s_width) / 2 + s_width;
-			            sprintf(leaderboardScore, "%02d%*s%*s%4d",++rank,field_width + (s_width % 2), user.handle, field_width - s_width - 1 ,"", user.score);
-						
-						// cout << leaderboardScore << endl;
-						//sprintf(leaderboardScore,"  %2d\t\t%20"
+			            sprintf(leaderboardScore, "%02d%*s%*s%4d",++rank,field_width + (s_width % 2), user.handle, field_width - s_width - 5 ,"", user.score);
 
 						gLeaderBoardScores[rank - 1].loadFromRenderedText( leaderboardScore, textColor );
 						gLeaderBoardScores[rank - 1].render( 221 , Y);
@@ -328,14 +288,14 @@ int main( int argc, char* args[] )
                     gModeTexture.render(gModeTexture.getWidth(), 0 ); 
                     SDL_RenderPresent( gRenderer );
 
-					
+					//Pressing the "Esc" key takes one back to the menu
 					if(e.key.keysym.sym==SDLK_ESCAPE)
 					{
 						Mix_HaltMusic();
 						cout<< "Back To Menu" << endl;
 						where = MENU;
 					}
-
+					//Press "C" key on keyboard to enter the Classic Mode
 					if(e.key.keysym.sym==SDLK_c)
 					{
 						cout<< "CLASSIC Mode" << endl;
@@ -343,7 +303,7 @@ int main( int argc, char* args[] )
 						startTime = SDL_GetTicks();
 
 					}
-
+					//Press "T" key on keyboard to enter the Treasure Hunt Mode
 					if(e.key.keysym.sym==SDLK_t)
 					{
 						cout<< "Treasure Hunt Mode" << endl;
@@ -368,7 +328,6 @@ int main( int argc, char* args[] )
 					}
 					if( renderText )
 					{
-						//Text is not empty
 						if( inputText != "" )
 						{
 							//Render new text
@@ -427,8 +386,8 @@ int main( int argc, char* args[] )
 
 					else
 					{
-						Karim.hitten--;
-						Karim.hitten = max(0, Karim.hitten);
+						//Karim.hitten--;
+						//Karim.hitten = max(0, Karim.hitten);
 						for(int i=0;i<10;i++)
 						{
 							if(!barrier[i].flag_of_obstacle)
@@ -454,9 +413,7 @@ int main( int argc, char* args[] )
 							{
 								if(!fb[i].flag_of_fireball)
 								{
-									//Karim.Power--;
-									//power_path[6]--;
-									//gPowerTexture.loadFromFile(power_path);
+
 									fb[i].flag_of_fireball=1;
 									fb[i].mPosX=Karim.mPosX+Karim.Karim_WIDTH;
 									fb[i].mPosY=Karim.mPosY+Karim.Karim_HEIGHT/2-5;
@@ -466,11 +423,11 @@ int main( int argc, char* args[] )
 							Karim.fireball_throwed=0;
 						}
 
-						//Scroll background
-                				scrollingOffset-=(4+hello);
+								//Scroll background
+                				scrollingOffset-=(4+hello); //Determinant of the scrolling speed
                 				//cout << "What up" << endl;
                 				//cout <<hello << endl;
-                    				hello+= .0005;
+                    			hello+= .0005;
                 				if( scrollingOffset < -gBGTexture.getWidth() )
                 				{	
                     					scrollingOffset = 0;
@@ -501,7 +458,7 @@ int main( int argc, char* args[] )
 						{
 							if(fb[i].flag_of_fireball)
 							{
-								fb[i].move();
+								fb[i].move(); 
 								fb[i].render();
 								if(fb[i].mPosX>SCREEN_WIDTH)
 								{
@@ -509,7 +466,7 @@ int main( int argc, char* args[] )
 								}
 							}
 						}
-						//hey hey
+						
 						//score = score + 1;
 						for(int i=0;i<10;i++)
 						{
@@ -517,17 +474,18 @@ int main( int argc, char* args[] )
 							{
 								barrier[i].move(hello);
 
+								//collision detection 
 								if(checkCollision(Karim.Karim_Rect,barrier[i].Obstacle_rect) && !barrier[i].hitten)
 								{
 									barrier[i].hitten = 1;
-									//new addition below
-									Karim.Life-=25;
+									
+									Karim.Life-=25; //Reduces life in each event of collision
+
 									health_path[7]++;
 									gHealthTexture.loadFromFile(health_path);
+
 									Karim.hitten=77;
-									cout << "Life :" << Karim.Life << endl;
-									//new addition above
-									//cout<<"Pathore bari khailam"<<endl;
+									cout << "Life :" << Karim.Life << endl; //In each loss of life, the remaining lives will be showed in the terminal
 								}
 							}
 
@@ -552,14 +510,15 @@ int main( int argc, char* args[] )
 								if(checkCollision(Karim.Karim_Rect,plane[i].Moving_Obstacle_rect) && !plane[i].hitten)
 								{
 									plane[i].hitten = 1;
-									//new addition below
-									Karim.Life-=25;
+									
+									Karim.Life-=25;  //Reduces life in each event of collision
+
 									health_path[7]++;
 									gHealthTexture.loadFromFile(health_path);
+
 									Karim.hitten=77;
-									cout << "Life :" << Karim.Life << endl;
-									//new addition above
-									//cout<<"Plane e bari khailam"<<endl;
+									cout << "Life :" << Karim.Life << endl; //In each loss of life, the remaining lives will be showed in the terminal
+									
 								}
 
 							}
@@ -569,7 +528,7 @@ int main( int argc, char* args[] )
 								plane[i].mPosX=SCREEN_WIDTH+rand()%15000;
 								plane[i].flag_of_obstacle=0;
 								plane[i].hitten=0;
-								score += 10;
+								score += 10; //Adds 10 to score in each event of avoidance
 							}
 							if(plane[i].mPosX<SCREEN_WIDTH)
 							{
@@ -577,32 +536,29 @@ int main( int argc, char* args[] )
 								{
 									if(checkCollision(fb[j].Fireball_rect, plane[i].Moving_Obstacle_rect) && fb[j].flag_of_fireball)
 									{
-										score += 50;
+										score += 50; //Adds 50 to the score in each event of destroying a plane
+
 										plane[i].mPosX=SCREEN_WIDTH+(rand()%10)*(rand()%15000);
 										plane[i].flag_of_obstacle=0;
+
 										fb[j].flag_of_fireball=0;
-										//cout<<"Plane pidailam"<<endl;
+										
 									}
 								}
 							}
 							plane[i].render();
 						}
 
-						//new addition below
 						sprintf(getScore, "Score : %04d", score);
 						gScore.loadFromRenderedText( getScore, textColor );
 						gScore.render( ( SCREEN_WIDTH - gScore.getWidth() - gScore.getWidth()) + 50, 35);
 						
 						gHealthTexture.render(50,30);
-						//gPowerTexture.render(50,50);
-
-						//new addition above
+					
 
 						//Go to next frame
 						//Update screen
                 		
-
-						//new add below
 						if(Karim.Life<=0)
 						{
 							where = GAMEOVER;
@@ -611,11 +567,10 @@ int main( int argc, char* args[] )
 						}
 						SDL_RenderPresent( gRenderer );
 
-						//new add above
 					}
 					
 				}
-
+				//Levels in the Treasure Hunt Mode
 				else if(where == LEVELS)
 				{
 					Mix_HaltMusic();
@@ -623,30 +578,34 @@ int main( int argc, char* args[] )
                    	SDL_RenderClear( gRenderer );
 					switch(level)
 					{
-						case 1:
+						case 1: //Level 1
 						{
                    			gR1Texture.render( 0, 0 );
               				gR1Texture.render(gR1Texture.getWidth(), 0 ); 
               				SDL_RenderPresent( gRenderer );
-               				
-                    		SDL_WaitEvent(&e);
-                    		if(e.key.keysym.sym==SDLK_2)
-							{
-								level++;
-										
-								lAns = CORRECT;
 
+							//Mousemotion has been prohibitted in all the levels.
+							//In case of answering the riddles only keyboard event is applicable
+                    		SDL_WaitEvent(&e);
+                    		if(e.type != SDL_MOUSEMOTION)
+                    		{
+                    			if(e.key.keysym.sym==SDLK_2)
+								{
+									level++;
+										
+									lAns = CORRECT; //lAns is the flag to store whether the answer is correct or not
+								}
+								else
+								{
+									lAns = WRONG;
+									
+								}
+								lFlag=1;
 							}
-							else
-							{
-								lAns = WRONG;
-							}
-							lFlag=1;
-							//cout<<hello<<endl;
-							//where = TH;
+							
                     	}break;
 
-						case 2:
+						case 2: //Level 2
 						{
                     		gR2Texture.render( 0, 0 );
                     		gR2Texture.render(gR2Texture.getWidth(), 0 ); 
@@ -655,21 +614,25 @@ int main( int argc, char* args[] )
                				
                     		SDL_WaitEvent(&e);
 
-                    		if(e.key.keysym.sym==SDLK_1)
-							{
-								level++;
+                    		if(e.type != SDL_MOUSEMOTION)
+                    		{
+                    			if(e.key.keysym.sym==SDLK_1)
+								{
+									level++;
 										
-								lAns = CORRECT;
+									lAns = CORRECT;
+								}
+								else
+								{
+									lAns = WRONG;
+									
+								}
+								lFlag=1;
 							}
-							else
-							{
-								lAns = WRONG;
-							}
-							lFlag=1;
-							//cout<<hello<<endl;
+							
 						}break;
 
-						case 3:
+						case 3: // Level 3
 						{
                     		gR3Texture.render( 0, 0 );
                     		gR3Texture.render(gR3Texture.getWidth(), 0 ); 
@@ -678,20 +641,24 @@ int main( int argc, char* args[] )
                				
                     		SDL_WaitEvent(&e);
 
-                    		if(e.key.keysym.sym==SDLK_4)
-							{
-								level++;
+                    		if(e.type != SDL_MOUSEMOTION)
+                    		{
+                    			if(e.key.keysym.sym==SDLK_4)
+								{
+									level++;
 										
-								lAns = CORRECT;
+									lAns = CORRECT;
+								}
+								else
+								{
+									lAns = WRONG;
+									
+								}
+								lFlag=1;
 							}
-							else
-							{
-								lAns = WRONG;
-							}
-							lFlag=1;
 						}break;
 
-						case 4:
+						case 4: //Level 4
 						{
                     		gR4Texture.render( 0, 0 );
                     		gR4Texture.render(gR4Texture.getWidth(), 0 ); 
@@ -700,87 +667,97 @@ int main( int argc, char* args[] )
                				
                     		SDL_WaitEvent(&e);
                     		
-                    		if(e.key.keysym.sym==SDLK_4)
-							{
-								level++;
+                    		if(e.type != SDL_MOUSEMOTION)
+                    		{
+                    			if(e.key.keysym.sym==SDLK_4)
+								{
+									level++;
 										
-								lAns = CORRECT;
-								//lFlag = 0;
+									lAns = CORRECT;
+								}
+								else
+								{
+									lAns = WRONG;
+									
+								}
+								lFlag=1;
 							}
-							else
-							{
-								lAns = WRONG;
-							}
-							lFlag=1;
 						}break;
 
-						case 5:
+						case 5: //Level 5
 						{
                    			gR5Texture.render( 0, 0 );
               				gR5Texture.render(gR5Texture.getWidth(), 0 ); 
               				SDL_RenderPresent( gRenderer );
                				
                     		SDL_WaitEvent(&e);
-                    		if(e.key.keysym.sym==SDLK_1)
-							{
-								level++;
+                    		if(e.type != SDL_MOUSEMOTION)
+                    		{
+                    			if(e.key.keysym.sym==SDLK_1)
+								{
+									level++;
 										
-								lAns = CORRECT;
-
+									lAns = CORRECT;
+								}
+								else
+								{
+									lAns = WRONG;
+									
+								}
+								lFlag=1;
 							}
-							else
-							{
-								lAns = WRONG;
-							}
-							lFlag=1;
 							//cout<<hello<<endl;
 							//where = TH;
                     	}break;
 
-						case 6:
+						case 6: //Level 6
 						{
                    			gR6Texture.render( 0, 0 );
               				gR6Texture.render(gR6Texture.getWidth(), 0 ); 
               				SDL_RenderPresent( gRenderer );
                				
                     		SDL_WaitEvent(&e);
-                    		if(e.key.keysym.sym==SDLK_4)
-							{
-								level++;
+                    		if(e.type != SDL_MOUSEMOTION)
+                    		{
+                    			if(e.key.keysym.sym==SDLK_4)
+								{
+									level++;
 										
-								lAns = CORRECT;
-
+									lAns = CORRECT;
+								}
+								else
+								{
+									lAns = WRONG;
+									
+								}
+								lFlag=1;
 							}
-							else
-							{
-								lAns = WRONG;
-							}
-							lFlag=1;
-							//cout<<hello<<endl;
-							//where = TH;
+							
                     	}break;
 
-						case 7:
+						case 7: //Level 7
 						{
                    			gR7Texture.render( 0, 0 );
               				gR7Texture.render(gR7Texture.getWidth(), 0 ); 
               				SDL_RenderPresent( gRenderer );
                				
                     		SDL_WaitEvent(&e);
-                    		if(e.key.keysym.sym==SDLK_1)
-							{
-								level++;
+                    		if(e.type != SDL_MOUSEMOTION)
+                    		{
+                    			if(e.key.keysym.sym==SDLK_1)
+								{
+									level++;
 										
-								lAns = CORRECT;
-
+									lAns = CORRECT;
+								}
+								else
+								{
+									lAns = WRONG;
+									
+								}
+								lFlag=1;
 							}
-							else
-							{
-								lAns = WRONG;
-							}
-							lFlag=1;
-							//cout<<hello<<endl;
-							//where = TH;
+						
                     	}break;
 
 						default:
@@ -822,19 +799,22 @@ int main( int argc, char* args[] )
                    		SDL_RenderClear( gRenderer );
 						if(lAns == CORRECT)
 						{
+							lAns = WRONG;
 							prevhello = hello;
 							if(level>7)
 							{
 								gCongratsTexture.render( 0, 0 );
-              				 	gCongratsTexture.render(gCongratsTexture.getWidth(), 0 ); 
+              				 	gCongratsTexture.render(gCongratsTexture.getWidth(), 0 ); //Shows the congratulation message of game completion if all the levels are completed
               				 	where = MENU;
-              				 	recall = 1;
+                   				whereInMenu = DEFAULT;
+                    			recall=1;
+                    			cout << "recalled" <<endl;
 
 							}
 							else
 							{
 								gRightTexture.render( 0, 0 );
-              					gRightTexture.render(gRightTexture.getWidth(), 0 ); 
+              					gRightTexture.render(gRightTexture.getWidth(), 0 ); //Shows user the Right answer message
               					where = LEVELS;
 							}
 
@@ -843,7 +823,7 @@ int main( int argc, char* args[] )
 						{
 							hello = prevhello;
 							gWrongTexture.render( 0, 0 );
-              				gWrongTexture.render(gWrongTexture.getWidth(), 0 ); 
+              				gWrongTexture.render(gWrongTexture.getWidth(), 0 ); //Shows user the wrong answer message and asks to replay
               				where = LEVELS;
 						}
 						SDL_RenderPresent( gRenderer );
@@ -882,9 +862,7 @@ int main( int argc, char* args[] )
 							{
 								if(!fb[i].flag_of_fireball)
 								{
-									//Karim.Power--;
-									//power_path[6]--;
-									//gPowerTexture.loadFromFile(power_path);
+
 									fb[i].flag_of_fireball=1;
 									fb[i].mPosX=Karim.mPosX+Karim.Karim_WIDTH;
 									fb[i].mPosY=Karim.mPosY+Karim.Karim_HEIGHT/2-5;
@@ -896,8 +874,8 @@ int main( int argc, char* args[] )
 
 						//Scroll background
                 		scrollingOffset-=(4+hello);
-                				//cout << "What up" << endl;
-                				//cout <<hello << endl;
+                				
+                		//cout <<hello << endl;
                     	hello+= .0005;
                 		if( scrollingOffset < -gBGTexture.getWidth() )
                 		{	
@@ -937,8 +915,7 @@ int main( int argc, char* args[] )
 								}
 							}
 						}
-						//hey hey
-						//score = score + 1;
+						
 						for(int i=0;i<10;i++)
 						{
 							if(barrier[i].flag_of_obstacle)
@@ -948,14 +925,13 @@ int main( int argc, char* args[] )
 								if(checkCollision(Karim.Karim_Rect,barrier[i].Obstacle_rect) && !barrier[i].hitten)
 								{
 									barrier[i].hitten = 1;
-									//new addition below
+									
 									Karim.Life-=25;
 									health_path[7]++;
 									gHealthTexture.loadFromFile(health_path);
 									Karim.hitten=77;
 									cout << "Life :" << Karim.Life << endl;
-									//new addition above
-									//cout<<"Pathore bari khailam"<<endl;
+									
 								}
 							}
 
@@ -980,14 +956,13 @@ int main( int argc, char* args[] )
 								if(checkCollision(Karim.Karim_Rect,plane[i].Moving_Obstacle_rect) && !plane[i].hitten)
 								{
 									plane[i].hitten = 1;
-									//new addition below
+									
 									Karim.Life-=25;
 									health_path[7]++;
 									gHealthTexture.loadFromFile(health_path);
 									Karim.hitten=77;
 									cout << "Life :" << Karim.Life << endl;
-									//new addition above
-									//cout<<"Plane e bari khailam"<<endl;
+									
 								}
 
 							}
@@ -1009,28 +984,27 @@ int main( int argc, char* args[] )
 										plane[i].mPosX=SCREEN_WIDTH+(rand()%10)*(rand()%15000);
 										plane[i].flag_of_obstacle=0;
 										fb[j].flag_of_fireball=0;
-										//cout<<"Plane pidailam"<<endl;
+										
 									}
 								}
 							}
 							plane[i].render();
 						}
 
-						//new addition below
+					
 						sprintf(getScore, "Score : %04d", score);
 						gScore.loadFromRenderedText( getScore, textColor );
 						gScore.render( ( SCREEN_WIDTH - gScore.getWidth() - gScore.getWidth()) + 50, 35);
 						
 						gHealthTexture.render(50,30);
-						//gPowerTexture.render(50,50);
+					
 
-						//new addition above
 
 						//Go to next frame
 						//Update screen
                 		
 						SDL_RenderPresent( gRenderer );
-						//new add below
+						
 						if(Karim.Life<=0)
 						{
 							where = GAMEOVER2;
@@ -1038,14 +1012,14 @@ int main( int argc, char* args[] )
 							SDL_Delay(1000);
 						}
 
-						if(score>=100)
+						if(score>=350)
 						{
 							score = 0;
 							lFlag = 0;
 							Karim.Life = 100;
 							health_char='1';
                             health_path="health/1h.png";
-							cout<<Karim.Life<<endl;
+							//cout<<Karim.Life<<endl;
 							
 							SDL_Delay(1000);
 							//PauseOn = 1;
@@ -1055,7 +1029,7 @@ int main( int argc, char* args[] )
 
 						
 
-						//new add above
+					
 					}
 					
 				}
@@ -1091,8 +1065,9 @@ int main( int argc, char* args[] )
 					LeaderboardData.insert(now);
 
 					updateScores();
+
 					cout<<"works"<<endl;
-					//writeSaveData();
+				
 
 					SDL_Delay(2000);
 				}
@@ -1101,8 +1076,10 @@ int main( int argc, char* args[] )
 
 					SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 					SDL_RenderClear( gRenderer );
+
 					gGO2Texture.render( 0, 0 );
-                    gGO2Texture.render(gGO2Texture.getWidth(), 0 ); 
+                    gGO2Texture.render(gGO2Texture.getWidth(), 0 );
+
 					//Update screen
 					SDL_RenderPresent( gRenderer );
 

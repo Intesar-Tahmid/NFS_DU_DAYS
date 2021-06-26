@@ -26,7 +26,7 @@ Mix_Music *gPlayMusic = NULL;
 
 int frame = 0;
 int startTime = 0;
-int level = 1,lFlag=0,lAns=0;
+int level = 1,lFlag=0,lAns=WRONG;
 string PlayerHandle = " ";
 double prevhello = 0;	
 
@@ -216,7 +216,7 @@ bool loadMedia()
 	printf( "Failed to load Menu music! SDL_mixer Error: %s\n", Mix_GetError() );
 	success = false;
     }
-    gPlayMusic = Mix_LoadMUS( "Sounds/S2.wav" );
+    gPlayMusic = Mix_LoadMUS( "Sounds/S1.wav" );
     if( gPlayMusic == NULL )
     {
 	printf( "Failed to load Play music! SDL_mixer Error: %s\n", Mix_GetError() );
@@ -523,7 +523,33 @@ void close()
 {
 	//Free loaded images
 	gBGTexture.free();
-
+	gUBGTexture.free();
+	gMenuPlayTexture.free();
+	gMenuInsTexture.free();
+	gMenuLeadTexture.free();
+	gMenuExitTexture.free();
+	gInsTexture.free();
+	gIns1Texture.free();
+	gModeTexture.free();
+	gKarim.free();
+	gObstacleTexture.free();
+	gPlaneTexture.free();
+	gFireballTexture.free();
+	gLeaderBoard1.free();
+	gLeaderBoard2.free();
+	gHealthTexture.free();
+	gGameOverTexture.free();
+	gR1Texture.free();
+	gR2Texture.free();
+	gR3Texture.free();
+	gR4Texture.free();
+	gR5Texture.free();
+	gR6Texture.free();
+	gR7Texture.free();
+	gWrongTexture.free();
+	gRightTexture.free();
+	gCongratsTexture.free();
+	gGO2Texture.free();
 	//Destroy window	
 	SDL_DestroyRenderer( gRenderer );
 	SDL_DestroyWindow( gWindow );

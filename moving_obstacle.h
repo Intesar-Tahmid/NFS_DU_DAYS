@@ -17,7 +17,7 @@ class Moving_Obstacle
 		int mVelX;
 		int flag_of_obstacle;
 		int hitten;
-		int counter;
+		
 		char path_of_Moving_Obstacle;
 		//Maximum axis velocity of the Moving_Obstacle
 		static const int Moving_Obstacle_VEL = -10;
@@ -37,7 +37,7 @@ class Moving_Obstacle
     private:
 		//The X and Y offsets of the Moving_Obstacle
 		//The velocity of the Moving_Obstacle
-		int fuck;
+		int f;
 };
 
 void Moving_Obstacle::init()
@@ -49,7 +49,7 @@ void Moving_Obstacle::init()
 	Moving_Obstacle_rect.w=Moving_Obstacle_WIDTH;
 	Moving_Obstacle_rect.h=Moving_Obstacle_HEIGHT;
 	hitten=0;
-	counter=0;	
+	
 }
 
 Moving_Obstacle::Moving_Obstacle()
@@ -62,7 +62,7 @@ Moving_Obstacle::Moving_Obstacle()
 	Moving_Obstacle_rect.w=Moving_Obstacle_WIDTH;
 	Moving_Obstacle_rect.h=Moving_Obstacle_HEIGHT;
 	hitten=0;
-	counter=0;
+
 }	
 
 void Moving_Obstacle::move(double speed)

@@ -17,9 +17,9 @@ class Karim
 		//Maximum axis velocity of the Karim
 		static const int Karim_VEL = 10;
 		int jumped;
-        	int fireball_throwed;
+        int fireball_throwed;
 		int Life;
-		int Power;
+		
 		int hitten;
 		//Initializes the variables
 		Karim();
@@ -62,7 +62,7 @@ void Karim::init()
  	Karim_Rect.w=Karim_WIDTH;
  	Karim_Rect.h=Karim_HEIGHT;
  	Life=100;
- 	Power=0;
+ 	
 }
 Karim::Karim()
 {
@@ -82,7 +82,7 @@ Karim::Karim()
  	Karim_Rect.w=Karim_WIDTH;
  	Karim_Rect.h=Karim_HEIGHT;
  	Life=100;
- 	Power=0;
+ 	
 }
 
 void Karim::jump()
@@ -111,13 +111,13 @@ void Karim::handleEvent( SDL_Event& e )
         if(!PauseOn)
         switch( e.key.keysym.sym )
         {
-        	case 'p': PauseOn=1;break;
+        	case 'p': PauseOn=1;break;                  //if P is pressed, game is paused
             case SDLK_UP: mVelY -= Karim_VEL; break;
             case SDLK_DOWN: mVelY += Karim_VEL; break;
-            case 'a': mVelX -= Karim_VEL; break;
-            case 'd': mVelX += Karim_VEL; break;
-            case 'w': jumped=1;break;
-            case 'q': fireball_throwed=1;break;
+            case 'a': mVelX -= Karim_VEL; break;        //if A is pressed,runner goes left
+            case 'd': mVelX += Karim_VEL; break;        //if D is pressed, runner goes right
+            case 'w': jumped=1;break;                   //if W is pressed, runner jumps
+            case 'q': fireball_throwed=1;break;         //if q is pressed, runner shoots fireballs
             
         }
         else

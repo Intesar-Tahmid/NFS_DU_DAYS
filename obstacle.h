@@ -35,7 +35,7 @@ class Obstacle
     private:
 		//The X and Y offsets of the Obstacle
 		//The velocity of the Obstacle
-		int fuck;
+		int f;
 };
 void Obstacle::init()
 {
